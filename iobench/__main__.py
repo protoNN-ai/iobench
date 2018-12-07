@@ -4,12 +4,14 @@ import os
 import logging
 from timeit import default_timer as timer
 from ._version import VERSION
+from .utils.io import save_data_to_json
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
 
 # TODO: collect all metadata (host name, file system, cnt files, timing etc )
 # TODO: use config to set default data path and logs path
+metadata = {}
 
 
 def main():
@@ -25,7 +27,7 @@ def main():
     cnt_files = len(files)
     time_elapsed = time_end - time_start
     LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
-
+    save_data_to_json(metadata, "./logs/log.json")
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
 
