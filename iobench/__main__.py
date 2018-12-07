@@ -9,13 +9,14 @@ from .utils.io import save_data_to_json
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
 
+metadata = {}
 # TODO: collect all metadata (host name, file system, cnt files, timing etc )
 # TODO: use config to set default data path and logs path
-metadata = {}
 
 
 def main():
     """entry point for the iobench CLI"""
+
     print("iobench v " + str(VERSION))
     if len(sys.argv) < 2:
         print("specify path")
@@ -28,6 +29,7 @@ def main():
     time_elapsed = time_end - time_start
     LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
     save_data_to_json(metadata, "./logs/log.json")
+    # TODO: name output file with hostname and timestamp
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
 
