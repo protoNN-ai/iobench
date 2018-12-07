@@ -2,9 +2,11 @@
 import sys
 import os
 import logging
+import datetime
+from system_query import query_all
 from timeit import default_timer as timer
 from ._version import VERSION
-from .utils.io import save_data_to_json
+from .utils.io import save_data_to_json, get_time_str
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
@@ -20,6 +22,9 @@ def main():
     print("iobench v " + str(VERSION))
     if len(sys.argv) < 2:
         print("specify path")
+    metadata["timestamp"] = datetime.datetime.now().isoformat()
+    metadata["platform"] = query_all()
+    # TODO: get storage back-end details
     path = sys.argv[1]
     LOGGER.info("reading list of files in directory")
     time_start = timer()
@@ -28,8 +33,10 @@ def main():
     cnt_files = len(files)
     time_elapsed = time_end - time_start
     LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
-    save_data_to_json(metadata, "./logs/log.json")
-    # TODO: name output file with hostname and timestamp
+    name_file_results = "{}.json".format(get_time_str())
+    path_results = "./logs"
+    save_data_to_json(metadata, os.path.join(path_results, name_file_results))
+    # TODO: add hostname to results
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
 
