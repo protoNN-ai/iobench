@@ -8,6 +8,9 @@ from ._version import VERSION
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
 
+# TODO: collect all metadata (host name, file system, cnt files, timing etc )
+
+
 def main():
     """entry point for the iobench CLI"""
     print("iobench v " + str(VERSION))
@@ -18,8 +21,9 @@ def main():
     time_start = timer()
     files = [os.path.join(path, f) for f in os.listdir(path)]
     time_end = timer()
-    LOGGER.info("{} files listed in {} s".format(str(len(files)), time_end - time_start))
-
+    cnt_files = len(files)
+    time_elapsed = time_end - time_start
+    LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
 
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
