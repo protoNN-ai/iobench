@@ -9,6 +9,7 @@ LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
 
 # TODO: collect all metadata (host name, file system, cnt files, timing etc )
+# TODO: use config to set default data path and logs path
 
 
 def main():
