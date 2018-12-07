@@ -12,7 +12,6 @@ LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
 
 metadata = {}
-# TODO: collect all metadata (host name, file system, cnt files, timing etc )
 # TODO: use config to set default data path and logs path
 
 
@@ -49,7 +48,7 @@ def main():
         print("specify path")
     metadata["timestamp"] = datetime.datetime.now().isoformat()
     metadata["platform"] = query_all()
-    # TODO: get storage back-end details
+    # TODO: get storage back-end details into metadata
     metadata["path_data"] = sys.argv[1]
     metadata["experiments"] = []
     list_files(metadata)

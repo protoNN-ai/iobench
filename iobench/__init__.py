@@ -1,3 +1,5 @@
+"""deep learning IO benchmark"""
+
 from ._version import VERSION
 
 
