@@ -16,6 +16,14 @@ metadata = {}
 # TODO: use config to set default data path and logs path
 
 
+def save_results(metadata):
+    hostname = metadata["platform"]["host"]
+    timestamp = metadata["timestamp"]
+    name_file_results = "{}_{}.json".format(hostname, timestamp)
+    path_results = "./logs"
+    save_data_to_json(metadata, os.path.join(path_results, name_file_results))
+
+
 def main():
     """entry point for the iobench CLI"""
 
@@ -33,9 +41,7 @@ def main():
     cnt_files = len(files)
     time_elapsed = time_end - time_start
     LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
-    name_file_results = "{}.json".format(get_time_str())
-    path_results = "./logs"
-    save_data_to_json(metadata, os.path.join(path_results, name_file_results))
+    save_results(metadata)
     # TODO: add hostname to results
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
