@@ -3,6 +3,7 @@ import sys
 import os
 import logging
 import datetime
+from mpi4py import MPI
 from system_query import query_all
 from timeit import default_timer as timer
 from ._version import VERSION
@@ -37,24 +38,39 @@ def list_files(metadata):
     experiment_data["name"] = "listing"
     experiment_data["time_elapsed"] = time_elapsed
     metadata["experiments"].append(experiment_data)
+    return files
     # TODO: move this logic to parent class for all experiments
 
 
 def main():
     """entry point for the iobench CLI"""
 
-    print("iobench v " + str(VERSION))
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    cnt_workers = comm.Get_size()
+
+    if rank == 0:
+        print("iobench v " + str(VERSION))
+        print("cnt workers = " + str(cnt_workers))
+
     if len(sys.argv) < 2:
-        print("specify path")
-        exit(-1)
+        if rank == 0:
+            print("specify path")
+            exit(-1)
 
     metadata["timestamp"] = datetime.datetime.now().isoformat()
     metadata["platform"] = query_all()
     # TODO: get storage back-end details into metadata
     metadata["path_data"] = sys.argv[1]
     metadata["experiments"] = []
-    list_files(metadata)
-    save_results(metadata)
+    comm.Barrier()
+    files = None
+    if rank == 0:
+        files = list_files(metadata)
+    print(files)
+    files_local = comm.scatter(files, root=0)
+    if rank == 0:
+        save_results(metadata)
     # TODO: add hostname to results
     # TODO: shuffle file names across workers
     # TODO: make each worker read its portion of files
