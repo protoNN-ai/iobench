@@ -46,6 +46,8 @@ def main():
     print("iobench v " + str(VERSION))
     if len(sys.argv) < 2:
         print("specify path")
+        exit(-1)
+
     metadata["timestamp"] = datetime.datetime.now().isoformat()
     metadata["platform"] = query_all()
     # TODO: get storage back-end details into metadata
