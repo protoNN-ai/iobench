@@ -28,7 +28,7 @@ def list_files(metadata):
     LOGGER.info("reading list of files in directory")
     time_start = timer()
     path = metadata["path_data"]
-    files = [os.path.join(path, f) for f in os.listdir(path)]
+    files = [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     time_end = timer()
     cnt_files = len(files)
     time_elapsed = time_end - time_start
@@ -56,7 +56,17 @@ def chunk_list(seq, num):
 
 # TODO: make each worker read its portion of files
 def read_files(files, metadata):
-    pass
+    time_start = timer()
+    path = metadata["path_data"]
+    for entry in files:
+        # path_full = os.path.join(path, entry)
+        in_file = open(entry, "rb")
+        data = in_file.read()
+    time_end = timer()
+    time_elapsed = time_end - time_start
+    experiment_data = {}
+    experiment_data["name"] = "listing"
+    experiment_data["time_elapsed"] = time_elapsed
 
 
 def main():
