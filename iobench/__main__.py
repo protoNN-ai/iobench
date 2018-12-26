@@ -42,6 +42,18 @@ def list_files(metadata):
     # TODO: move this logic to parent class for all experiments
 
 
+def chunk_list(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
 def main():
     """entry point for the iobench CLI"""
 
@@ -64,11 +76,12 @@ def main():
     metadata["path_data"] = sys.argv[1]
     metadata["experiments"] = []
     comm.Barrier()
-    files = None
+    chunks = None
     if rank == 0:
         files = list_files(metadata)
-    print(files)
-    files_local = comm.scatter(files, root=0)
+        chunks = chunk_list(files, cnt_workers)
+    files_local = comm.scatter(chunks, root=0)
+    print("rank {} got {} files".format(rank, len(files_local)))
     if rank == 0:
         save_results(metadata)
     # TODO: add hostname to results
