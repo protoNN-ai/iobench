@@ -54,6 +54,11 @@ def chunk_list(seq, num):
     return out
 
 
+# TODO: make each worker read its portion of files
+def read_files(files, metadata):
+    pass
+
+
 def main():
     """entry point for the iobench CLI"""
 
@@ -82,11 +87,9 @@ def main():
         chunks = chunk_list(files, cnt_workers)
     files_local = comm.scatter(chunks, root=0)
     print("rank {} got {} files".format(rank, len(files_local)))
+    read_files(files_local, metadata)
     if rank == 0:
         save_results(metadata)
-    # TODO: add hostname to results
-    # TODO: shuffle file names across workers
-    # TODO: make each worker read its portion of files
 
 
 if __name__ == "__main__":
