@@ -35,7 +35,7 @@ def list_files(metadata):
     metadata["cnt_files"] = cnt_files
     LOGGER.info("{} files listed in {} s".format(cnt_files, time_elapsed))
     experiment_data = {}
-    experiment_data["name"] = "listing"
+    experiment_data["name"] = "reading"
     experiment_data["time_elapsed"] = time_elapsed
     metadata["experiments"].append(experiment_data)
     return files
@@ -67,6 +67,7 @@ def read_files(files, metadata):
     experiment_data = {}
     experiment_data["name"] = "listing"
     experiment_data["time_elapsed"] = time_elapsed
+    metadata["experiments"].append(experiment_data)
 
 
 def main():
